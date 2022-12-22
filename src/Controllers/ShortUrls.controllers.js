@@ -20,3 +20,16 @@ export function getOneUrl(req, res) {
 
     res.send(urlToSend)
 }
+
+export async function getOpenShortUrl(req, res) {
+    res.locals.visitCount+=1
+    const { id, url, visitCount } = res.locals
+
+    try {
+        await connection.query('UPDATE urls SET "visitCount"=$1 WHERE id=$2',[visitCount,id])
+        res.redirect(url)
+    } catch (err) {
+        console.log(err)
+        res.sendStatus(500)
+    }
+}

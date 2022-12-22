@@ -55,12 +55,31 @@ export async function conflictUrlUser(req, res, next) {
 export async function validateUrlId(req, res, next) {
     const { id } = req.params
     // const userId = req.userId
+    if (isNaN(id)) {
+        return res.sendStatus(404)
+    }
     try {
         const urlExist = await connection.query('SELECT id,"shortUrl",url FROM urls WHERE id=$1', [id])
         if (urlExist.rowCount === 0) {
             return res.sendStatus(404)
         }
         res.locals = urlExist.rows[0]
+    } catch (err) {
+        console.log(err)
+        res.sendStatus(500)
+    }
+    next()
+}
+
+export async function validateShortUrl(req, res, next) {
+    const { shortUrl } = req.params
+
+    try {
+        const shortUrlExists = await connection.query('SELECT * FROM urls WHERE "shortUrl"=$1', [shortUrl])
+        if (shortUrlExists.rowCount === 0) {
+            return res.sendStatus(404)
+        }
+        res.locals = shortUrlExists.rows[0]
     } catch (err) {
         console.log(err)
         res.sendStatus(500)
