@@ -1,12 +1,12 @@
 import { Router } from "express";
-import { postShortUrl } from "../Controllers/ShortUrls.controllers.js";
-import { conflictUrlUser, validateAuthUrls, validateUrl } from "../Middlewares/ShortUrls.middlewares.js";
+import { getOneUrl, postShortUrl } from "../Controllers/ShortUrls.controllers.js";
+import { conflictUrlUser, validateAuthUrls, validateUrl, validateUrlId } from "../Middlewares/ShortUrls.middlewares.js";
 
 const shortUrlsRoutes = Router()
 
-shortUrlsRoutes.post('/urls/shorten', validateAuthUrls,validateUrl,conflictUrlUser,postShortUrl)
+shortUrlsRoutes.post('/urls/shorten', validateAuthUrls, validateUrl, conflictUrlUser, postShortUrl)
 
-shortUrlsRoutes.get('/urls/:id')
+shortUrlsRoutes.get('/urls/:id', validateUrlId, getOneUrl)
 shortUrlsRoutes.get('/urls/open/:shortUrl')
 shortUrlsRoutes.get('/users/me')
 
