@@ -14,7 +14,7 @@ export async function postSignUp(req, res) {
 
 export function postSignIn(req, res) {
     const { id } = res.locals
-
+    
     const token = jwt.sign({ id: id }, process.env.SECRET_JWT, { expiresIn: 86400 })
     res.send({ token })
 }
