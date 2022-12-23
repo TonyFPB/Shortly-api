@@ -13,12 +13,11 @@ export function validateSignUp(req, res, next) {
     }
 
     if (user.password !== user.confirmPassword) {
-        return res.status(422).send({ message: "Os campos PASSWORD e CONFIRMPASSWOR nao sao iguais" })
+        return res.status(422).send({ message: "Os campos PASSWORD e CONFIRMPASSWORD nao sao iguais" })
     }
     res.locals = validation.value
     const passwordHash = bcrypt.hashSync(res.locals.password, 10)
     res.locals.password = passwordHash
-    console.log(res.locals)
     next()
 }
 
