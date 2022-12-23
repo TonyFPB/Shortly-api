@@ -37,13 +37,13 @@ export async function getOpenShortUrl(req, res) {
 export async function getUrlsUser(req, res) {
     const userId = req.userId
     try {
-        const userUrls = connection.query(`
+        const userUrls = await connection.query(`
             SELECT us.id, us.name, SUM(ur."visitCount") AS "visitCount",ARRAY_AGG (JSON_BUILD_OBJECT('id',ur.id,'shortUrl',ur."shortUrl",'url',ur.url,'visitCount',ur."visitCount") ORDER BY ur.id) AS "shortenedUrls"  
             FROM urls ur 
             JOIN users us ON ur."userId"=us.id 
             WHERE "userId"=$1 GROUP BY us.id;
         `, [userId])
-        res.send((await userUrls).rows)
+        res.send(userUrls.rows[0])
     } catch (err) {
         console.log(err)
         res.sendStatus(500)
