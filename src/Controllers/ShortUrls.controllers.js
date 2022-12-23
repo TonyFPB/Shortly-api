@@ -50,13 +50,26 @@ export async function getUrlsUser(req, res) {
     }
 }
 
-
-
 export async function deleteShortUrl(req, res) {
     const { id } = res.locals
     try {
         await connection.query('DELETE FROM urls WHERE id=$1', [id])
         res.sendStatus(204)
+    } catch (err) {
+        console.log(err)
+        res.sendStatus(500)
+    }
+}
+
+export async function getRankingUrls(req, res) {
+    try {
+        const ranking = await connection.query(`
+            SELECT us.id,us.name,COUNT(CASE WHEN ur."userId" is null THEN null ELSE 1 END) AS "linksCount", CASE WHEN ur."userId" is null THEN 0 ELSE SUM(ur."visitCount") END AS "visitCount"
+            FROM  urls ur
+            RIGHT JOIN users us ON ur."userId"=us.id
+            GROUP BY ur."userId", us.id ORDER BY "visitCount" DESC ,"linksCount" DESC  LIMIT 10 ;
+        `)
+        res.send(ranking.rows)
     } catch (err) {
         console.log(err)
         res.sendStatus(500)

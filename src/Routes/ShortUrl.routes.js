@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { deleteShortUrl, getOneUrl, getOpenShortUrl, getUrlsUser, postShortUrl } from "../Controllers/ShortUrls.controllers.js";
+import { deleteShortUrl, getOneUrl, getOpenShortUrl, getRankingUrls, getUrlsUser, postShortUrl } from "../Controllers/ShortUrls.controllers.js";
 import { conflictUrlUser, validateAuthUrls, validateShortUrl, validateUrl, validateUrlId } from "../Middlewares/ShortUrls.middlewares.js";
 
 const shortUrlsRoutes = Router()
@@ -12,6 +12,6 @@ shortUrlsRoutes.get('/users/me', validateAuthUrls, getUrlsUser)
 
 shortUrlsRoutes.delete('/urls/:id', validateAuthUrls, validateUrlId, deleteShortUrl)
 
-shortUrlsRoutes.get('/ranking')
+shortUrlsRoutes.get('/ranking',getRankingUrls)
 
 export default shortUrlsRoutes
